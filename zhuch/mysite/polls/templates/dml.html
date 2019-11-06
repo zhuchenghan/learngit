@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+        <div id="page-wrapper">
+            {% block "con_top"%}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            数据库增删改查
+                        </h1>
+                    </div>
+                </div>
+            {% endblock %}
+
+{% block 'content' %}
+
+<form action="" method="post">
+   <div>
+   <select name="plat">
+     <option value="0" selected="selected">请选择所需要的平台</option>  
+     {% for line in platform_num %}
+     <option value="{{ line.platform_id }} ">{{ line.platform_name }}</option>
+     {% endfor %}
+   </select>
+   </div>
+<br/>
+ <div>
+ 	<textarea class="form-control" rows="10" name="sql"></textarea>	
+ </div>
+<br/>
+
+<div>
+{% for db in dbs_num %}
+<label>
+<input name="db" type="radio" value="{{ db.db_id }}" >{{ db.db_name }} 
+</label>  
+{% endfor %}
+ </div>
+
+<br/>
+<input type="submit" value="Submit"/>
+</form>
+
+
+
+
+{% if  error %}
+  {{ error }}
+{% else %}
+{{ flag }}
+{{ db }}
+
+
+<div id="list">  </div>
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+	var List= {{ sql|safe }};
+ 
+    $('#list').prepend(List);
+ 
+    for(i in List){
+        console.log(i);// i为索引
+    }
+</script>
+
+
+{% endif  %}
+
+
+
+{% endblock %}
+
