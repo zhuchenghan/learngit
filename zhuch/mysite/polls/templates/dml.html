@@ -44,22 +44,19 @@
 
 {% if  error %}
   {{ error }}
+
 {% else %}
 {{ flag }}
 {{ db }}
+{{ sql }}
+
+{{ one_data }}
 
 
-<div id="list">  </div>
+
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-	var List= {{ sql|safe }};
- 
-    $('#list').prepend(List);
- 
-    for(i in List){
-        console.log(i);// i为索引
-    }
 </script>
 
 

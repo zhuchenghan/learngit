@@ -25,8 +25,6 @@ class FirstPage(models.Model):
 		return self.project_name
 
 
-
-
 class dbs(models.Model):
 	db_name=models.CharField(max_length=10)
 	db_id=models.IntegerField(default=1)

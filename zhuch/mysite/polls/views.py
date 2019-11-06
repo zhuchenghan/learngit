@@ -4,6 +4,7 @@ from .models import *
 from django.urls import reverse
 import json
 import pymysql
+import re
 
 
 class DB():
@@ -13,10 +14,10 @@ class DB():
 	def select_sql(self,sql):
 		try:
 			self.cursor.execute(sql)
+			data=self.cursor.fetchall()
+			return data
 		except:
-			pass
-		data=self.cursor.fetchall()
-		return data
+			return False
 
 	def execute_sql(self,sql):
 		try:
@@ -39,12 +40,16 @@ def base(request):
 
 def dml(request):
 	if request.method=="POST" and request.POST:
-		flag=request.POST.get("plat")
-		db=request.POST.get("db")
+		flag=(request.POST.get("plat"))
+		db=(request.POST.get("db"))
 		sql=request.POST.get("sql")
 
+		#if re.match('select',sql).group():
 		if not flag or flag=="0" or not db or not sql:
 			error="请选择选项"
+		else:
+			db_ms="slave"
+			one_data=db_info.objects.filter(platform_id=flag).filter(db_id=db).filter(db_type=db_ms)
 	dbs_num=dbs.objects.order_by('db_id')
 	platform_num=platform.objects.order_by('platform_id')
 	return render_to_response("dml.html",locals())
