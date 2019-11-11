@@ -49,7 +49,11 @@ def dml(request):
 			error="请选择选项"
 		else:
 			db_ms="slave"
-			one_data=db_info.objects.filter(platform_id=flag).filter(db_id=db).filter(db_type=db_ms)
+			one_data=db_info.objects.filter(platform_id=flag).filter(db_id=db).filter(db_type=db_ms)[0]
+			name=one_data.db_name
+			# getdb=DB(one_data.get("db_host"),one_data.get("usename"),one_data.get("password"),one_data.get("port"),one_data.get("db_name"))
+			# selectdata=getdb.select_sql(sql)
+
 	dbs_num=dbs.objects.order_by('db_id')
 	platform_num=platform.objects.order_by('platform_id')
 	return render_to_response("dml.html",locals())
