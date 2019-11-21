@@ -9,8 +9,8 @@ import re
 
 class DB():
 	def __init__(self,host,user,passwd,port,db):
-		self.conn=pymysql(host=host,user=user,password=passwd,port=port,database=db,charset="utf8")
-		self.cursor=self.conn.cursor
+		self.conn=pymysql.connect(host=host,user=user,password=passwd,port=int(port),database=db,charset="utf8")
+		self.cursor=self.conn.cursor()
 	def select_sql(self,sql):
 		try:
 			self.cursor.execute(sql)
@@ -50,10 +50,9 @@ def dml(request):
 		else:
 			db_ms="slave"
 			one_data=db_info.objects.filter(platform_id=flag).filter(db_id=db).filter(db_type=db_ms)[0]
-			name=one_data.db_name
-			# getdb=DB(one_data.get("db_host"),one_data.get("usename"),one_data.get("password"),one_data.get("port"),one_data.get("db_name"))
-			# selectdata=getdb.select_sql(sql)
-
+			host,name,user,passwd,port=one_data.db_host,one_data.db_name,one_data.usename,one_data.password,one_data.port
+			getdb=DB(host,user,passwd,port,name)
+			selectdata=getdb.select_sql(sql)
 	dbs_num=dbs.objects.order_by('db_id')
 	platform_num=platform.objects.order_by('platform_id')
 	return render_to_response("dml.html",locals())
