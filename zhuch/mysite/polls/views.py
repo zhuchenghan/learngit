@@ -53,6 +53,8 @@ def dml(request):
 			host,name,user,passwd,port=one_data.db_host,one_data.db_name,one_data.usename,one_data.password,one_data.port
 			getdb=DB(host,user,passwd,port,name)
 			selectdata=getdb.select_sql(sql)
+			
+
 	dbs_num=dbs.objects.order_by('db_id')
 	platform_num=platform.objects.order_by('platform_id')
 	return render_to_response("dml.html",locals())

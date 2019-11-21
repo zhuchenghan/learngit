@@ -46,15 +46,19 @@
   {{ error }}
 
 {% else %}
-{{ flag }}
-{{ db }}
-{{ sql }}
 
-
+<table class="table table-condensed">
+ 
 {% for data in selectdata %}
-{{ data }}
-{% endfor %}
+<tr>
+  {% for line in data %}
+   
+   <td class="active">{{ line }}</td>
 
+  {% endfor %}
+   </tr>
+{% endfor %}
+</table>
 
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
