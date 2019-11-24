@@ -34,7 +34,6 @@ class dbs(models.Model):
 class platform(models.Model):
 	platform_name=models.CharField(max_length=20)
 	platform_id=models.IntegerField()
-	# platform_db=models.ManyToManyField(dbs)
 	def __str__(self):
 		return self.platform_name
 

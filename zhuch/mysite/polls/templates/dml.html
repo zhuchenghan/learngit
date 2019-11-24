@@ -14,29 +14,29 @@
 
 <form action="" method="post">
    <div>
-   <select name="plat">
-     <option value="0" selected="selected">请选择所需要的平台</option>  
+   <select id="select_id" name="plat">
+     <option  value="" >请选择所需要的平台</option>  
      {% for line in platform_num %}
-     <option value="{{ line.platform_id }} ">{{ line.platform_name }}</option>
+    <option id="option_id" value="{{ line.platform_id }}"  {% if flag == line.platform_id %} selected {% endif %}  >{{ line.platform_name }}</option>
      {% endfor %}
    </select>
    </div>
 <br/>
  <div>
- 	<textarea class="form-control" rows="10" name="sql"></textarea>	
+ 	<textarea  id="textarea" class="form-control" rows="10" name="sql"></textarea>	
  </div>
 <br/>
 
 <div>
 {% for db in dbs_num %}
 <label>
-<input name="db" type="radio" value="{{ db.db_id }}" >{{ db.db_name }} 
+<input id="db_radio" name="db" type="radio" value="{{ db.db_id }}" >{{ db.db_name }} 
 </label>  
 {% endfor %}
  </div>
 
 <br/>
-<input type="submit" value="Submit"/>
+<input  type="submit" value="Submit" />
 </form>
 
 
@@ -60,15 +60,15 @@
 {% endfor %}
 </table>
 
-<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
-<script type="text/javascript">
-
-</script>
-
-
 {% endif  %}
 
 
 
+<script type="text/javascript">
+
+
+</script>
+
+{{ flag }}
 {% endblock %}
 
