@@ -5,7 +5,9 @@ from django.urls import reverse
 import json
 import pymysql
 import re
-
+import time
+import os
+import paramiko
 
 class DB():
 	def __init__(self,host,user,passwd,port,db):
@@ -26,14 +28,9 @@ class DB():
 		except:
 			self.conn.rollback()
 
-# def index(request):
-# 	# select * from polls_question order by pub_date desc limit 5;
-# 	latest_question_list=Question.objects.order_by('-pub_date')[:5]  #(数据的集合)
-# 	#output=', '.join([q.question_text for q in latest_question_list])
-# 	#context={'latest_question_list':latest_question_list}
-# 	#return HttpResponse(output)
-# 	# return HttpResponse("hello world")
-# 	return render_to_response('index.html', locals())
+
+
+
 
 def base(request):
 	return render_to_response("base.html",locals())
@@ -43,17 +40,26 @@ def dml(request):
 		flag=(request.POST.get("plat"))
 		db=(request.POST.get("db"))
 		sql=request.POST.get("sql")
+		gzip_model=request.POST.get("gzip")
 
 		#if re.match('select',sql).group():
-		if not flag or flag=="0" or not db or not sql:
+		if not flag or flag=="0" or not db or not sql or not gzip_model:
 			error="请选择选项"
 		else:
+			flag,gzip_model=int(flag),int(gzip_model)
 			db_ms="slave"
 			one_data=db_info.objects.filter(platform_id=flag).filter(db_id=db).filter(db_type=db_ms)[0]
 			host,name,user,passwd,port=one_data.db_host,one_data.db_name,one_data.usename,one_data.password,one_data.port
 			getdb=DB(host,user,passwd,port,name)
-			selectdata=getdb.select_sql(sql)
-			flag=int(flag)
+			if gzip_model==1:
+				selectdata=getdb.select_sql(sql)	
+			elif gzip_model==2:
+				TIME=time.strftime("%Y%m%d%H%M%S", time.localtime())
+				sqlname=time.strftime("%Y%m%d%H%M%S", time.localtime())+".csv"
+				sql=sql+" into outfile '/tmp/%s' " %sqlname
+				getdb.execute_sql(sql)
+			elif gzip_model==3:
+				pass
 
 	dbs_num=dbs.objects.order_by('db_id')
 	platform_num=platform.objects.order_by('platform_id')
@@ -67,6 +73,27 @@ def bak(request):
 
 def install(request):
 	return render_to_response("install.html",locals())
+
+
+def download(request,filename):
+	base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+	file_path = os.path.join(base_dir, 'polls',"download",filename)
+	file=open(file_path,'rb')
+	response=FileResponse(file)
+	response['Content-Type'] = 'application/octet-stream'
+	response['Content-Disposition'] = 'attachment;filename="BatchPayTemplate.xls"'
+	return response
+
+
+
+# def index(request):
+# 	# select * from polls_question order by pub_date desc limit 5;
+# 	latest_question_list=Question.objects.order_by('-pub_date')[:5]  #(数据的集合)
+# 	#output=', '.join([q.question_text for q in latest_question_list])
+# 	#context={'latest_question_list':latest_question_list}
+# 	#return HttpResponse(output)
+# 	# return HttpResponse("hello world")
+# 	return render_to_response('index.html', locals())
 
 
 # def backupage(request):

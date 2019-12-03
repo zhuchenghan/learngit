@@ -20,5 +20,7 @@ urlpatterns=[
 	path('bak',views.bak,name='bak'),
 	####
 	path('install',views.install,name='install'),
+	####
+	path('download/<*.?csv>$',views.download,name='download'),
 
 ]

@@ -27,25 +27,48 @@
  </div>
 <br/>
 
+
 <div>
 {% for db in dbs_num %}
 <label>
 <input id="db_radio" name="db" type="radio" value="{{ db.db_id }}" >{{ db.db_name }} 
 </label>  
+&nbsp;
 {% endfor %}
  </div>
 
+
+<div>
+<label>
+<input id="gzip_radio" name="gzip" type="radio"  value="1" > 正常输出
+</label>  
+&nbsp;
+<label>
+<input id="gzip_radio" name="gzip" type="radio"  value="2"> 输出csv格式
+</label>  
+&nbsp;
+<label>
+<input id="gzip_radio" name="gzip" type="radio"  value="3">  输出csv格式并压缩
+</label>  
+
+ </div>
+ 
+
 <br/>
-<input  type="submit" value="Submit" />
+<input  type="submit" value="Submit"   />
 </form>
 
 
 
 
 {% if  error %}
-  {{ error }}
+        <script>
+                alert('{{ error }}');
+        </script>
 
 {% else %}
+
+{% if gzip_model == 1 %}
 
 <table class="table table-condensed">
  
@@ -60,15 +83,21 @@
 {% endfor %}
 </table>
 
+
+{% elif gzip_model == 2  %}
+  
+  <a href="download/{{ sqlname }}" style="color: blue;font-size: 14px">下载文件</a>
+{% elif gzip_model == 3  %}
+    输出csv格式并压缩
+
+{% endif %}
+
+
 {% endif  %}
 
 
 
-<script type="text/javascript">
 
 
-</script>
-
-{{ flag }}
 {% endblock %}
 
