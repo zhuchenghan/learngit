@@ -68,14 +68,10 @@ def dml(request):
 				sql=sql+" into outfile '%s' " %remotepath
 				getdb.execute_sql(sql)
 				myssh(host,localpath,remotepath)
-
 			elif gzip_model==3:
 				pass
-
 	dbs_num=dbs.objects.order_by('db_id')
 	platform_num=platform.objects.order_by('platform_id')
-	
-	
 	return render_to_response("dml.html",locals())
 
 
@@ -92,7 +88,7 @@ def download(request,filename):
 	file=open(file_path,'rb')
 	response=FileResponse(file)
 	response['Content-Type'] = 'application/octet-stream'
-	response['Content-Disposition'] = 'attachment;filename="BatchPayTemplate.xls"'
+	response['Content-Disposition'] = 'attachment;filename="%s"' %filename
 	return response
 
 
