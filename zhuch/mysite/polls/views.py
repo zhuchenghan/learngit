@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response,render,get_object_or_404
-from django.http import HttpResponse,Http404,HttpResponseRedirect
+from django.http import HttpResponse,Http404,HttpResponseRedirect,FileResponse
 from .models import *
 from django.urls import reverse
 import json
@@ -29,7 +29,13 @@ class DB():
 			self.conn.rollback()
 
 
-
+def myssh(host,localfile,remotefile):
+	private_key = paramiko.RSAKey.from_private_key_file('/root/.ssh/id_rsa')
+	transport = paramiko.Transport((host, 22))
+	transport.connect(username='root', pkey=private_key )
+	sftp = paramiko.SFTPClient.from_transport(transport)
+	sftp.get(remotefile, localfile)
+	transport.close()
 
 
 def base(request):
@@ -54,10 +60,15 @@ def dml(request):
 			if gzip_model==1:
 				selectdata=getdb.select_sql(sql)	
 			elif gzip_model==2:
+				base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 				TIME=time.strftime("%Y%m%d%H%M%S", time.localtime())
 				sqlname=time.strftime("%Y%m%d%H%M%S", time.localtime())+".csv"
-				sql=sql+" into outfile '/tmp/%s' " %sqlname
+				remotepath="/tmp/%s" %sqlname
+				localpath=os.path.join(base_dir, 'polls',"download",sqlname)
+				sql=sql+" into outfile '%s' " %remotepath
 				getdb.execute_sql(sql)
+				myssh(host,localpath,remotepath)
+
 			elif gzip_model==3:
 				pass
 

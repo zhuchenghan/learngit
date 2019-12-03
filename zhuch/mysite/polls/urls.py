@@ -21,6 +21,6 @@ urlpatterns=[
 	####
 	path('install',views.install,name='install'),
 	####
-	path('download/<*.?csv>$',views.download,name='download'),
+	path('download/<str:filename>',views.download,name='download'),
 
 ]
